@@ -10,15 +10,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import ru.practicum.TestBase;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static ru.practicum.Constants.BASE_URL;
+import static ru.practicum.Constants.CREATE_ORDER_URL;
 
 @RunWith(Parameterized.class)
-public class OrdersTest extends TestBase {
+public class OrdersTest {
     public final String firstName;
     public final String lastName;
     public final String address;
@@ -50,9 +52,10 @@ public class OrdersTest extends TestBase {
     @Parameterized.Parameters
     public static Object[][] getOrder() {
         return new Object[][]{
-                {"Naruto", "Имя1", "dd, 14.", 4, "+7 800 355 35 35", 5, "2023-06-06", "Comment", List.of("BLACK")},
-                {"Naruto", "Имя2", "sds, 142apt.", 5, "+7 800 355 35 35", 5, "2023-06-06", "Comment", List.of("BLACK", "GREY")},
-                {"Naruto", "Имя3", "aa, 142apt.", 6, "+7 800 355 35 35", 5, "2026-06-06", "Comment", List.of("")},
+                {"Аркадий", "Иванов", "dd, 14.", 4, "+7 800 355 35 35", 5, "2023-06-06", "Comment", List.of("BLACK")},
+                {"Эдуард", "Петров", "sds, 142apt.", 5, "+7 800 355 35 35", 5, "2023-06-06", "Comment", List.of("BLACK", "GREY")},
+                {"Александр", "Пушкин", "sds, 142apt.", 5, "+7 800 355 35 35", 5, "2023-06-06", "Comment", List.of("GREY")},
+                {"Антон", "Колотушкин", "aa, 142apt.", 6, "+7 800 355 35 35", 5, "2026-06-06", "Comment", List.of("")},
 
         };
     }
@@ -72,7 +75,7 @@ public class OrdersTest extends TestBase {
                 .then()
                 .log().all()
                 .assertThat().body("track", notNullValue())
-                .statusCode(201);
+                .statusCode(SC_CREATED);
     }
 
 

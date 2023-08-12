@@ -8,15 +8,15 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.Before;
 import org.junit.Test;
-import ru.practicum.TestBase;
 import ru.practicum.models.OrdersResponse;
 
-import java.util.List;
-
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static ru.practicum.Constants.BASE_URL;
+import static ru.practicum.Constants.LIST_ORDER_URL;
 
-public class OrdersListTest extends TestBase {
+public class OrdersListTest {
 
     @Before
     public void setUp() {
@@ -30,7 +30,7 @@ public class OrdersListTest extends TestBase {
     @DisplayName("Получение списка заказов")
     public void getOrdersTest() {
 
-        List<OrdersResponse> response = given()
+        given()
                 .header("Content-type", "application/json")
                 .queryParam("limit", 10)
                 .log().all()
@@ -38,7 +38,7 @@ public class OrdersListTest extends TestBase {
                 .get(LIST_ORDER_URL)
                 .then()
                 .log().all()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .assertThat().body("orders.track", notNullValue())
                 .extract().body().jsonPath().getList("orders", OrdersResponse.class);
 

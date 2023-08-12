@@ -6,16 +6,16 @@ import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
-import ru.practicum.TestBase;
 import ru.practicum.models.LoginCourierRequest;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import static ru.practicum.Constants.BASE_URL;
 import static ru.practicum.data.DataGenerator.*;
+import static ru.practicum.steps.LoginApi.*;
 
-public class LoginCourierTest extends TestBase {
+public class LoginCourierTest {
     @Before
     public void setUp() {
         RestAssured.baseURI = BASE_URL;
@@ -28,17 +28,8 @@ public class LoginCourierTest extends TestBase {
     @DisplayName("Авторизация с валидными значениями")
     public void validLoginTest() {
         LoginCourierRequest data = getValidLogin();
-
-        given()
-                .header("Content-type", "application/json")
-                .body(data)
-                .log().all()
-                .when()
-                .post(LOGIN_COURIER_URL)
-                .then()
-                .log().all()
-                .assertThat().body("id", equalTo(213004))
-                .statusCode(200);
+        Response response = sendPostRequestLogin(data);
+        checkValidLogin(response,213004);
     }
 
     @Test
@@ -48,17 +39,8 @@ public class LoginCourierTest extends TestBase {
     @DisplayName("Авторизация- невалидный логин")
     public void invalidLoginTest() {
         LoginCourierRequest data = getInValidLogin();
-
-        given()
-                .header("Content-type", "application/json")
-                .body(data)
-                .log().all()
-                .when()
-                .post(LOGIN_COURIER_URL)
-                .then()
-                .log().all()
-                .assertThat().body("message", equalTo("Учетная запись не найдена"))
-                .statusCode(404);
+        Response response = sendPostRequestLogin(data);
+        checkInValidLogin(response, "Учетная запись не найдена");
     }
 
     @Test
@@ -68,17 +50,8 @@ public class LoginCourierTest extends TestBase {
     @DisplayName("Авторизация - невалидный пароль")
     public void invalidPassTest() {
         LoginCourierRequest data = getInValidPassLogin();
-
-        given()
-                .header("Content-type", "application/json")
-                .body(data)
-                .log().all()
-                .when()
-                .post(LOGIN_COURIER_URL)
-                .then()
-                .log().all()
-                .assertThat().body("message", equalTo("Учетная запись не найдена"))
-                .statusCode(404);
+        Response response = sendPostRequestLogin(data);
+        checkInValidLogin(response, "Учетная запись не найдена");
     }
 
     @Test
@@ -88,17 +61,8 @@ public class LoginCourierTest extends TestBase {
     @DisplayName("Авторизация - без пароля")
     public void withoutLoginTest() {
         LoginCourierRequest data = getWithoutPassLogin();
-
-        given()
-                .header("Content-type", "application/json")
-                .body(data)
-                .log().all()
-                .when()
-                .post(LOGIN_COURIER_URL)
-                .then()
-                .log().all()
-                .assertThat().body("message", equalTo("Недостаточно данных для входа"))
-                .statusCode(400);
+        Response response = sendPostRequestLogin(data);
+        checkLoginWithoutPass(response, "Недостаточно данных для входа");
     }
 
 }
