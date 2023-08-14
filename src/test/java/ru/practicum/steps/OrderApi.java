@@ -5,9 +5,6 @@ import io.restassured.response.Response;
 import ru.practicum.models.OrderRequest;
 
 import static io.restassured.RestAssured.given;
-import static org.apache.http.HttpStatus.*;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.equalTo;
 import static ru.practicum.Constants.*;
 
 public class OrderApi {
@@ -22,10 +19,6 @@ public class OrderApi {
                 .post(CREATE_ORDER_URL);
     }
 
-    @Step("Проверить создание заказа")
-    public static void checkCreateOrder(Response response) {
-        response.then().assertThat().body("track", notNullValue()).statusCode(SC_CREATED);
-    }
 
     @Step("Получить Track заказа")
     public static Integer getTrackOrder(Response response) {
@@ -54,25 +47,12 @@ public class OrderApi {
                 .get(GET_ORDER_URL);
     }
 
-    @Step("Проверить получение заказа по Track")
-    public static void checkGetOrder(Response response, Integer track) {
-        response.then().assertThat().body("order.track", equalTo(track)).statusCode(SC_OK);
-    }
 
     @Step("Получить заказа по ID")
     public static Integer getOrderId(Response response) {
         return response.then().extract().body().jsonPath().get("order.id");
     }
 
-    @Step("Проверить получение заказа без номера")
-    public static void checkGetOrderWithoutTrack(Response response, String data) {
-        response.then().assertThat().body("message", equalTo(data)).statusCode(SC_BAD_REQUEST);
-    }
-
-    @Step("Проверить получение заказа - несуществующий номер")
-    public static void checkGetOrderUnrealTrack(Response response, String data) {
-        response.then().assertThat().body("message", equalTo(data)).statusCode(SC_NOT_FOUND);
-    }
 
     @Step("Отправить запрос на принятие заказа")
     public static Response sendPostRequestAcceptOrder(Integer id, Integer courier) {
@@ -86,10 +66,6 @@ public class OrderApi {
                 .put(ACCEPT_ORDER_URL + "/{id}");
     }
 
-    @Step("Проверить принятие заказа")
-    public static void checkAcceptOrder(Response response) {
-        response.then().assertThat().body("ok", equalTo(true)).statusCode(SC_OK);
-    }
 
     @Step("Отправить запрос на принятие заказа - без курьера")
     public static Response sendPostRequestAcceptOrderWithoutCourier(Integer id) {
@@ -102,14 +78,5 @@ public class OrderApi {
                 .put(ACCEPT_ORDER_URL + "/{id}");
     }
 
-    @Step("Проверить ошибку принятия заказа без курьера")
-    public static void checkAcceptOrderWithoutCourier(Response response, String data) {
-        response.then().assertThat().body("message", equalTo(data)).statusCode(SC_BAD_REQUEST);
-    }
-
-    @Step("Проверить ошибку принятия заказа неправильный номер")
-    public static void checkAcceptOrderUnreal(Response response, String data) {
-        response.then().assertThat().body("message", equalTo(data)).statusCode(SC_NOT_FOUND);
-    }
 
 }

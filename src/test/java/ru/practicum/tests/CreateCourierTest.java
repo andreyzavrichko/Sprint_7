@@ -7,11 +7,13 @@ import io.qameta.allure.Story;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import ru.practicum.models.CreateCourierRequest;
 
 import static ru.practicum.Constants.BASE_URL;
+import static ru.practicum.checks.CourierCheck.*;
 import static ru.practicum.data.DataGenerator.getCourier;
 import static ru.practicum.data.DataGenerator.getCourierWithoutLogin;
 import static ru.practicum.steps.CourierApi.*;
@@ -22,6 +24,12 @@ public class CreateCourierTest {
         RestAssured.baseURI = BASE_URL;
     }
 
+    public Integer id;
+    @After
+    public void delCourier() {
+        Response responseDelete = deleteCourier(id);
+         checkDeleteCourier(responseDelete);
+    }
 
     @Test
     @Feature("Courier")
@@ -48,10 +56,8 @@ public class CreateCourierTest {
         Response responseDouble = sendPostRequestCreateCourier(data);
         checkCreateDoubleCourier(responseDouble);
         // Постусловие - Получить id
-        Integer id = getIdCourier(data);
-        // Постусловие - Удалить курьера
-        Response responseDelete = deleteCourier(id);
-        checkDeleteCourier(responseDelete);
+        id = getIdCourier(data);
+
     }
 
 
@@ -77,10 +83,8 @@ public class CreateCourierTest {
         Response response = sendPostRequestCreateCourier(data);
         checkCreateCourier(response);
         // Получить id
-        Integer id = getIdCourier(data);
-        // Удалить курьера
-        Response responseDelete = deleteCourier(id);
-        checkDeleteCourier(responseDelete);
+        id = getIdCourier(data);
+
     }
 
 }

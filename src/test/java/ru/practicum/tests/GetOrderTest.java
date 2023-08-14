@@ -12,6 +12,7 @@ import org.junit.Test;
 import ru.practicum.models.OrderRequest;
 
 import static ru.practicum.Constants.BASE_URL;
+import static ru.practicum.checks.OrderCheck.*;
 import static ru.practicum.data.DataGenerator.getOrderBody;
 import static ru.practicum.steps.OrderApi.*;
 

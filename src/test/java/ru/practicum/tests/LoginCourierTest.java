@@ -12,8 +12,9 @@ import org.junit.Test;
 import ru.practicum.models.LoginCourierRequest;
 
 import static ru.practicum.Constants.BASE_URL;
+import static ru.practicum.checks.LoginCheck.*;
 import static ru.practicum.data.DataGenerator.*;
-import static ru.practicum.steps.LoginApi.*;
+import static ru.practicum.steps.LoginApi.sendPostRequestLogin;
 
 public class LoginCourierTest {
     @Before
